@@ -1,0 +1,5 @@
+/* Billing.css */
+.billing-page {
+  display: flex;
+  flex-direction: column;
+}

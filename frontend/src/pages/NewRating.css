@@ -1,0 +1,160 @@
+/* NewRating.css */
+.rating-form-card {
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+.form-grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+@media (max-width: 600px) {
+  .form-grid-2 {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+}
+
+/* Suffix wrapper styling for inputs like % and /10 */
+.input-suffix-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input-suffix-wrapper input {
+  padding-right: 48px; /* space for the suffix label */
+}
+
+.input-suffix {
+  position: absolute;
+  right: 12px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-sub);
+  pointer-events: none; /* input focus through suffix */
+  user-select: none;
+}
+
+/* Live Preview Box */
+.live-preview-box {
+  border-radius: 6px;
+  padding: 16px 20px;
+  margin: 12px 0 4px 0;
+  transition: all 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.preview-label {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.preview-value-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.preview-score-text {
+  font-size: 14px;
+}
+
+.preview-score-text strong {
+  font-size: 18px;
+}
+
+/* Live Preview Colors mapped to score tiers */
+.preview-excellent {
+  background: #dcfce7;
+  border: 1px solid #bbf7d0;
+  color: #15803d;
+}
+
+.preview-excellent .preview-label {
+  color: #166534;
+}
+
+[data-theme="dark"] .preview-excellent {
+  background: rgba(22, 163, 74, 0.15);
+  border: 1px solid rgba(22, 163, 74, 0.3);
+  color: #4ade80;
+}
+[data-theme="dark"] .preview-excellent .preview-label {
+  color: #4ade80;
+}
+
+.preview-good {
+  background: #dbeafe;
+  border: 1px solid #bfdbfe;
+  color: #1d4ed8;
+}
+
+.preview-good .preview-label {
+  color: #1e40af;
+}
+
+[data-theme="dark"] .preview-good {
+  background: rgba(59, 130, 246, 0.15);
+  border: 1px solid rgba(59, 130, 246, 0.3);
+  color: #60a5fa;
+}
+[data-theme="dark"] .preview-good .preview-label {
+  color: #60a5fa;
+}
+
+.preview-average {
+  background: #fef9c3;
+  border: 1px solid #fef08a;
+  color: #a16207;
+}
+
+.preview-average .preview-label {
+  color: #854d0e;
+}
+
+[data-theme="dark"] .preview-average {
+  background: rgba(217, 119, 6, 0.15);
+  border: 1px solid rgba(217, 119, 6, 0.3);
+  color: #fbbf24;
+}
+[data-theme="dark"] .preview-average .preview-label {
+  color: #fbbf24;
+}
+
+.preview-poor {
+  background: #fee2e2;
+  border: 1px solid #fecaca;
+  color: #dc2626;
+}
+
+.preview-poor .preview-label {
+  color: #991b1b;
+}
+
+[data-theme="dark"] .preview-poor {
+  background: rgba(239, 68, 68, 0.15);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  color: #f87171;
+}
+[data-theme="dark"] .preview-poor .preview-label {
+  color: #f87171;
+}
+
+/* Actions Row */
+.form-actions-row {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 16px;
+  border-top: 1px solid var(--border-light);
+  padding-top: 20px;
+}
