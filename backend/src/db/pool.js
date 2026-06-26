@@ -1,8 +1,8 @@
 const { Pool: PgPool } = require('pg');
-require('dotenv').config();
+const path = require('path');
+require('dotenv').config({ path: path.resolve(__dirname, '../../../.env') });
 
 const fs = require('fs');
-const path = require('path');
 
 const STORE_PATH = path.join(__dirname, 'db_store.json');
 
