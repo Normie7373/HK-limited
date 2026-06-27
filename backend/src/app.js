@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
+const fs = require('fs');
 require('dotenv').config({ path: path.resolve(__dirname, '../../.env') });
 
 const authRoutes = require('./routes/auth');
@@ -18,7 +19,11 @@ const { authenticateJWT } = require('./middleware/auth');
 const app = express();
 
 // Middlewares
-app.use(cors());
+const corsOptions = {
+  origin: process.env.FRONTEND_URL || '*',
+  credentials: true,
+};
+app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -38,10 +43,24 @@ app.use('/api/ratings', authenticateJWT, ratingsRoutes);
 app.use('/api/reports', authenticateJWT, reportsRoutes);
 app.use('/api/alerts', authenticateJWT, alertsRoutes);
 
-// 404 Route handler
-app.use((req, res, next) => {
-  res.status(404).json({ success: false, message: 'API Route Not Found' });
-});
+// Serve frontend static files in production (Render unified deployment)
+const frontendDistPath = path.resolve(__dirname, '../../frontend/dist');
+if (fs.existsSync(frontendDistPath)) {
+  app.use(express.static(frontendDistPath));
+  // SPA fallback - serve index.html for any non-API route
+  app.get('*', (req, res) => {
+    if (!req.path.startsWith('/api')) {
+      res.sendFile(path.join(frontendDistPath, 'index.html'));
+    } else {
+      res.status(404).json({ success: false, message: 'API Route Not Found' });
+    }
+  });
+} else {
+  // 404 Route handler (local dev or when frontend is not built)
+  app.use((req, res, next) => {
+    res.status(404).json({ success: false, message: 'API Route Not Found' });
+  });
+}
 
 // Error handling middleware
 app.use(errorHandler);

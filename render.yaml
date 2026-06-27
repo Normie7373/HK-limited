@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: hk-shipping-system
+    runtime: node
+    buildCommand: npm run render-build
+    startCommand: npm start
+    envVars:
+      - key: DATABASE_URL
+        sync: false
+      - key: JWT_SECRET
+        sync: false
+      - key: NODE_ENV
+        value: production
