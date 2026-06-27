@@ -1,8 +1,17 @@
 const { Pool: PgPool } = require('pg');
 const path = require('path');
-require('dotenv').config({ path: path.resolve(__dirname, '../../../.env') });
-
 const fs = require('fs');
+
+// Try loading .env from multiple possible locations (local dev vs serverless)
+const envPaths = [
+  path.resolve(__dirname, '../../../.env'),
+  path.resolve(__dirname, '../../.env'),
+  path.resolve(process.cwd(), '.env'),
+];
+for (const envPath of envPaths) {
+  const result = require('dotenv').config({ path: envPath });
+  if (!result.error) break;
+}
 
 const STORE_PATH = path.join(__dirname, 'db_store.json');
 
@@ -1140,8 +1149,22 @@ if (process.env.DATABASE_URL) {
       : { rejectUnauthorized: false }
   });
 } else {
-  console.log('DATABASE_URL is not set. Running on local mock JSON store.');
-  poolInstance = new Pool();
+  // In serverless environments, the mock JSON store won't work (read-only filesystem)
+  // Check if we're likely in a serverless environment
+  const isServerless = !!(process.env.NETLIFY || process.env.VERCEL || process.env.AWS_LAMBDA_FUNCTION_NAME);
+  if (isServerless) {
+    console.error('FATAL: DATABASE_URL environment variable is not set in the serverless environment.');
+    console.error('Please add DATABASE_URL to your Netlify/Vercel environment variables.');
+    // Create a stub pool that returns meaningful errors
+    poolInstance = {
+      query: async () => { throw new Error('DATABASE_URL is not configured. Please set it in your deployment dashboard.'); },
+      connect: async () => { throw new Error('DATABASE_URL is not configured.'); },
+      on: () => {}
+    };
+  } else {
+    console.log('DATABASE_URL is not set. Running on local mock JSON store.');
+    poolInstance = new Pool();
+  }
 }
 
 module.exports = poolInstance;
