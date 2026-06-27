@@ -1,19 +1,28 @@
 import axios from 'axios';
 
+const getBaseURL = () => {
+  if (import.meta.env.DEV) {
+    return import.meta.env.VITE_API_URL || 'http://localhost:5000';
+  }
+  
+  const url = import.meta.env.VITE_API_URL;
+  if (!url || url === '/api' || url === 'api') {
+    return typeof window !== 'undefined' ? window.location.origin : '';
+  }
+  
+  if (url.startsWith('/')) {
+    return typeof window !== 'undefined' ? window.location.origin + url : url;
+  }
+  
+  return url;
+};
+
 const axiosConfig = {
+  baseURL: getBaseURL(),
   headers: {
     'Content-Type': 'application/json',
   },
 };
-
-const devBaseURL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
-const prodBaseURL = import.meta.env.VITE_API_URL;
-
-if (import.meta.env.DEV && devBaseURL) {
-  axiosConfig.baseURL = devBaseURL;
-} else if (!import.meta.env.DEV && prodBaseURL) {
-  axiosConfig.baseURL = prodBaseURL;
-}
 
 const api = axios.create(axiosConfig);
 
